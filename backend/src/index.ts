@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { EshopBeClass } from "./class/eshopBeClass";
-import { Product } from './types/types';
+
 
 const app = express();
 const port = process.env.PORT || 3010;
@@ -14,6 +14,8 @@ app.use(express.json());  // Parsování JSON v body
 const eshopBe = new EshopBeClass();
 
 //inicializace dat jednoduchá funkce na vložení testovacích produktů do classy
+
+console.log('=== Backend server starting ===');
 
 async function initializeProducts () {
 
@@ -75,4 +77,19 @@ app.post('/api/products', async (req: Request, res: Response) => {
     catch (e) {
         console.error("failed create new product", e)
     }
-})
+});
+
+app.post('/api/orders', async (req: Request, res: Response) => {
+    try {
+        const orderData = req.body; // vytahneme data z req body
+        const newAddedOrder = await eshopBe.validateAndCreateOrder(orderData.cartItems, orderData.customerData); // k datum pristoupime jako k objektu s vlastnostmi
+        res.json(newAddedOrder);
+    }
+    catch (e: any) {
+        console.error("failed create new order", e);
+        res.status(500).send(e.message);
+    }
+});
+app.listen(port, () => {
+    console.log(`Server běží na http://localhost:${port}`);
+});

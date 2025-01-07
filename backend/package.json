@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "ts-node-dev src/index.ts",
+    "start": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "@types/cors": "^2.8.17",
     "cors": "^2.8.5",

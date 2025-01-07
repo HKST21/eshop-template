@@ -20,12 +20,36 @@ export class EshopBeClass {
                     description TEXT,
                     stockQuantity INTEGER NOT NULL DEFAULT 0,
                     image_url TEXT
-                )
+                );
+    
+                CREATE TABLE IF NOT EXISTS customers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    phone TEXT
+                );
+    
+                CREATE TABLE IF NOT EXISTS orders (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    customer_id INTEGER,
+                    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    total_price REAL NOT NULL,
+                    FOREIGN KEY (customer_id) REFERENCES customers(id)
+                );
+    
+                CREATE TABLE IF NOT EXISTS order_items (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    order_id INTEGER,
+                    product_id INTEGER,
+                    quantity INTEGER NOT NULL,
+                    FOREIGN KEY (order_id) REFERENCES orders(id),
+                    FOREIGN KEY (product_id) REFERENCES products(id)
+                );
             `;
-
-            this.db.run(sql, (err) => {
+    
+            this.db.exec(sql, (err) => {
                 if (err) {
-                    console.error('Chyba při vytváření tabulky:', err);
+                    console.error('Chyba při vytváření tabulek:', err);
                     reject(err);
                 } else {
                     console.log('Databáze byla úspěšně inicializována');
@@ -36,14 +60,32 @@ export class EshopBeClass {
     }
 
     async insertTestProducts() {
+        // Nejdřív zkontrolujeme, jestli už produkty existují
+        const existingProducts = await this.getProducts();
+        if (existingProducts && existingProducts.length > 0) {
+            console.log('Produkty už existují, přeskakuji inicializaci');
+            return;
+        }
+    
         const products = [
-            { id: 1, name: 'Iphone S21', price: 11990, description: 'Úplně nový Iphone S21Pro', stockQuantity: 1, imageUrl: "https://image.alza.cz/products/RI045b1/RI045b1-02.jpg?width=1000&height=1000" },
-            { id: 2, name: 'Samsung L7', price: 10120, description: 'Úplně nový Samsung L7, výkonný mobilní telefon z Koree', stockQuantity: 2, imageUrl: "https://image.alza.cz/products/SAMO0263b3/SAMO0263b3-09.jpg?width=1000&height=1000" }
+            { 
+                name: 'Iphone S21', 
+                price: 11990, 
+                description: 'Úplně nový Iphone S21Pro', 
+                stockQuantity: 1, 
+                imageUrl: "https://image.alza.cz/products/RI045b1/RI045b1-02.jpg?width=1000&height=1000" 
+            },
+            { 
+                name: 'Samsung L7', 
+                price: 10120, 
+                description: 'Úplně nový Samsung L7, výkonný mobilní telefon z Koree', 
+                stockQuantity: 2, 
+                imageUrl: "https://image.alza.cz/products/SAMO0263b3/SAMO0263b3-09.jpg?width=1000&height=1000" 
+            }
         ];
-
-        // Upravený SQL dotaz - přidány všechny sloupce
+    
         const stmt = this.db.prepare('INSERT INTO products (name, price, description, stockQuantity, image_url) VALUES (?, ?, ?, ?, ?)');
-
+    
         for (const product of products) {
             await new Promise((resolve, reject) => {
                 stmt.run([
@@ -58,7 +100,9 @@ export class EshopBeClass {
                 });
             });
         }
-    }
+    
+        console.log('Testovací produkty byly úspěšně vloženy');
+    };
 
     async createProduct(product: Product): Promise<number> {
         // Metoda pro vytvoření produktu v databázi
