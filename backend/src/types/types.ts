@@ -38,3 +38,17 @@ export interface Order {
     items?: OrderItem[];  // volitelné pole položek (pokud je budeme chtít načítat společně s objednávkou)
 };
 
+export interface CustomerData {
+    firstName: string,
+    lastName: string,
+    email: string,
+    phoneNumber: string,
+    deliveryAddress: string
+
+};
+
+export interface CreateOrderRequest {
+    cartItems: CartItem[];
+    customerData: CustomerData;
+}
+

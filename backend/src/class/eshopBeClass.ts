@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';  // Import SQLite knihovny
-import { Product, CartItem, Order, OrderItem } from '../types/types';  // Import interface pro produkt
+import { Product, CartItem, Order, OrderItem, CustomerData } from '../types/types';  // Import interface pro produkt
 
 export class EshopBeClass {
     private db: sqlite3.Database;  // Instance databáze (private = přístupná jen uvnitř třídy)
@@ -98,7 +98,7 @@ export class EshopBeClass {
      * Validuje dostupnost všech položek v košíku před vytvořením objednávky
      * @param cartItems - Pole položek v košíku, které chce uživatel objednat
      */
-    async validateAndCreateOrder(cartItems: CartItem[]) {
+    async validateAndCreateOrder(cartItems: CartItem[], customerData: CustomerData) {
         // Procházíme postupně každou položku v košíku
         // 'item' reprezentuje jeden produkt v košíku a jeho množství. použijeme for cyklus
         try {
@@ -119,15 +119,12 @@ export class EshopBeClass {
                 // Pokud je dostatek kusů, cyklus pokračuje na další položku
             }
 
-            const orderSuma = cartItems.reduce((acc, item) => {
-                return acc + (item.product.price * item.quantity);
-            }, 0);
-
-            // 3. Vytvoření objednávky
-            const orderId = await new Promise<number>((resolve, reject) => {
+            const customerId = await new Promise<number>((resolve, reject) => {
                 this.db.run(
-                    'INSERT INTO orders (total_price, date) VALUES (?, CURRENT_TIMESTAMP)',
-                    [orderSuma],
+                    'INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)',
+                    [`${customerData.firstName} ${customerData.lastName}`,
+                    customerData.email,
+                    customerData.phoneNumber],
                     function (err) {
                         if (err) reject(err);
                         resolve(this.lastID);
@@ -135,10 +132,26 @@ export class EshopBeClass {
                 );
             });
 
-            // 4. Vytvoření položek objednávky a aktualizace skladu
+            // 3. Výpočet celkové ceny
+            const orderSuma = cartItems.reduce((acc, item) => {
+                return acc + (item.product.price * item.quantity);
+            }, 0);
+
+            // 4. Vytvoření objednávky s ID zákazníka
+            const orderId = await new Promise<number>((resolve, reject) => {
+                this.db.run(
+                    'INSERT INTO orders (customer_id, total_price, date) VALUES (?, ?, CURRENT_TIMESTAMP)',
+                    [customerId, orderSuma],
+                    function (err) {
+                        if (err) reject(err);
+                        resolve(this.lastID);
+                    }
+                );
+            });
+
+            // 5. Vytvoření položek objednávky a aktualizace skladu
             const orderItems: OrderItem[] = [];
             for (const item of cartItems) {
-                // Vytvoření záznamu v order_items
                 const orderItemId = await new Promise<number>((resolve, reject) => {
                     this.db.run(
                         'INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)',
@@ -150,7 +163,6 @@ export class EshopBeClass {
                     );
                 });
 
-                // Aktualizace skladových zásob
                 await new Promise((resolve, reject) => {
                     this.db.run(
                         'UPDATE products SET stockQuantity = stockQuantity - ? WHERE id = ?',
@@ -170,33 +182,39 @@ export class EshopBeClass {
                 });
             }
 
-            // 5. Vytvoření emailové notifikace
+            // 6. Příprava emailové notifikace
             const emailContent = `
-            Děkujeme za Vaši objednávku č. ${orderId}!
-            
-            Shrnutí objednávky:
-            ${cartItems.map(item => `
-                Produkt: ${item.product.name}
-                Množství: ${item.quantity}
-                Cena za kus: ${item.product.price} EUR
-                Mezisoučet: ${item.product.price * item.quantity} EUR
-            `).join('\n')}
-            
-            Celková cena: ${orderSuma} EUR
-            
-            O dalším průběhu objednávky Vás budeme informovat.
-            
-            S pozdravem,
-            Váš eshop
-        `;
+        Děkujeme za Vaši objednávku č. ${orderId}!
+        
+        Údaje zákazníka:
+        Jméno: ${customerData.firstName} ${customerData.lastName}
+        Email: ${customerData.email}
+        Telefon: ${customerData.phoneNumber}
+        Doručovací adresa: ${customerData.deliveryAddress}
+        
+        Shrnutí objednávky:
+        ${cartItems.map(item => `
+            Produkt: ${item.product.name}
+            Množství: ${item.quantity}
+            Cena za kus: ${item.product.price} Kč
+            Mezisoučet: ${item.product.price * item.quantity} Kč
+        `).join('\n')}
+        
+        Celková cena: ${orderSuma} Kč
+        
+        O dalším průběhu objednávky Vás budeme informovat.
+        
+        S pozdravem,
+        Váš eshop
+    `;
 
             // TODO: Implementace odeslání emailu
             console.log('Email pro zákazníka:', emailContent);
 
-            // 6. Vrácení vytvořené objednávky
+            // 7. Vrácení vytvořené objednávky
             const order: Order = {
                 id: orderId,
-                customer_id: null, // Prozatím null, později můžete přidat customer_id
+                customer_id: customerId,
                 date: new Date().toISOString(),
                 total_price: orderSuma,
                 items: orderItems
@@ -210,5 +228,4 @@ export class EshopBeClass {
         }
 
     }
-
 }
