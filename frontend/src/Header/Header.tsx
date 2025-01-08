@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -16,18 +17,18 @@ export function Header() {
 
                     {/* Desktop Menu */}
                     <nav className="hidden md:flex space-x-8">
-                        <a href="/products" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        <Link to="/products" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
                             Buy Products Now
-                        </a>
-                        <a href="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        </Link>
+                        <Link to="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
                             About Us
-                        </a>
-                        <a href="/terms" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        </Link>
+                        <Link to="/terms" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
                             Terms and Conditions
-                        </a>
-                        <a href="/delivery" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        </Link>
+                        <Link to="/delivery" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
                             Payment and Delivery
-                        </a>
+                        </Link>
                     </nav>
 
                     {/* Mobile Menu Button */}

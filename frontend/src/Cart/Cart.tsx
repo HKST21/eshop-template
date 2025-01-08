@@ -1,46 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import eshop from "../class/eshopFeClass";
-import { CartItem, Product } from "../types/types";
+import { CartItem } from "../types/types";
+
+interface CartProps {
+    cart: CartItem[];
+    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+}
+
+export function Cart({ cart, setCart }: CartProps) {
+
+    
+    const [checkout, setCheckout] = useState<boolean>(false);
+
+    const totalPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
 
-export function Cart() {
-
-    const [cart, setCart] = useState<CartItem[]>([]); // inicialize with empty array
-    const [checkout, setCheckout] = useState<boolean>(false)
-
-    useEffect(() => {
-
-        const fetchProducts = async () => {
-            const allProducts = await eshop.getProducts(); // array of type products
-
-            if (allProducts) {
-
-                const cartItems = allProducts.map((product: Product) => ({ // we have to transform the structure of objects in array to CartItem to set it in cart state
-                    quantity: 1,
-                    product: {
-                        id: product.id,
-                        name: product.name,
-                        price: product.price
-                    }
-                }
-
-                ))
-                setCart(cartItems)
-            }
-
-        }
-        fetchProducts();
-
-    }, []);
-
-    const handleAddToCart = (productId: number) => {
-        eshop.addToCart(productId)
-
-    };
-
-    const handleRemoveFromCart = (productId: number) => {
-        eshop.removeFromCart(productId)
-    };
 
     const handleConfirmOrder = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -76,10 +50,7 @@ export function Cart() {
                     {item.product.name}
                     {item.product.price}
                     {item.quantity}
-                    <button onClick={() => handleAddToCart(item.product.id)}>Add to Cart</button>
-                    {cart ? (
-                        <button onClick={() => handleRemoveFromCart(item.product.id)}>Remove from Cart</button>
-                    ) : null}
+                    <div>Celková cena: {totalPrice} Kč</div>
                 </div>
             ))
             }</div>
