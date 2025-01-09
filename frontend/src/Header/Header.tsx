@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CartItem } from '../types/types';
+import { Cart } from '../Cart/Cart';
 
-export function Header() {
+interface HeaderProps {
+    cart: CartItem[],
+    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+}
+
+export function Header({ cart, setCart }: HeaderProps) {
+
     const [isOpen, setIsOpen] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     return (
         <header className="bg-white shadow-sm">
@@ -30,6 +39,30 @@ export function Header() {
                             Payment and Delivery
                         </Link>
                     </nav>
+
+                    <div>
+                        <button onClick={() => setIsCartOpen(true)}>
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            {cart.length > 0 && (
+                                <span>
+                                    {cart.length}
+                                </span>
+                            )}
+                        </button>
+
+                        {isCartOpen && (
+                            <div>
+                                <Cart cart={cart} setCart={setCart} onClose={() => setIsCartOpen(false)} />
+                            </div>
+                        )}
+                    </div>
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">

@@ -80,12 +80,15 @@ app.post('/api/products', async (req: Request, res: Response) => {
 });
 
 app.post('/api/orders', async (req: Request, res: Response) => {
+    console.log('Received order data:', req.body);
     try {
         const orderData = req.body; // vytahneme data z req body
+        console.log('Přijatá data', orderData);
         const newAddedOrder = await eshopBe.validateAndCreateOrder(orderData.cartItems, orderData.customerData); // k datum pristoupime jako k objektu s vlastnostmi
         res.json(newAddedOrder);
     }
     catch (e: any) {
+        console.error("Detail chyby:", e); 
         console.error("failed create new order", e);
         res.status(500).send(e.message);
     }
