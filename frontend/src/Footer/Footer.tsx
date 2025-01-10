@@ -1,27 +1,22 @@
 import { Link } from 'react-router-dom';
+import './Footer.css';
 
 export function Footer() {
     return (
-        <footer className="bg-gray-100">
-            <div className="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 lg:pt-24">
-                {/* Ponechte horní část footeru stejnou */}
-                
-                <div className="lg:flex lg:items-end lg:justify-between">
-                    <div>
-                        <div className="flex justify-center text-teal-600 lg:justify-start">
-                            {/* Vaše logo zůstává stejné */}
-                        </div>
-
-                        <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500 lg:text-left">
+        <footer className="footer">
+            <div className="footer-container">
+                <div className="footer-content">
+                    <div className="footer-info">
+                        <p className="footer-description">
                             Your trusted online shop for quality products. Fast delivery and great customer service.
                         </p>
                     </div>
 
-                    <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:mt-0 lg:justify-end lg:gap-12">
+                    <ul className="footer-nav">
                         <li>
                             <Link 
                                 to="/products" 
-                                className="text-gray-700 transition hover:text-gray-700/75"
+                                className="footer-link"
                             >
                                 Buy Products Now
                             </Link>
@@ -30,7 +25,7 @@ export function Footer() {
                         <li>
                             <Link 
                                 to="/about" 
-                                className="text-gray-700 transition hover:text-gray-700/75"
+                                className="footer-link"
                             >
                                 About Us
                             </Link>
@@ -39,7 +34,7 @@ export function Footer() {
                         <li>
                             <Link 
                                 to="/terms" 
-                                className="text-gray-700 transition hover:text-gray-700/75"
+                                className="footer-link"
                             >
                                 Terms & Conditions
                             </Link>
@@ -48,7 +43,7 @@ export function Footer() {
                         <li>
                             <Link 
                                 to="/delivery" 
-                                className="text-gray-700 transition hover:text-gray-700/75"
+                                className="footer-link"
                             >
                                 Payment & Delivery
                             </Link>
@@ -56,7 +51,7 @@ export function Footer() {
                     </ul>
                 </div>
 
-                <p className="mt-12 text-center text-sm text-gray-500 lg:text-right">
+                <p className="footer-copyright">
                     Copyright &copy; {new Date().getFullYear()}. All rights reserved.
                 </p>
             </div>

@@ -1,6 +1,7 @@
 .header {
-    background-color: #ffffff;
+    background-color: #000000;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    max-height: fit-content;
   }
   
   .header-container {
@@ -35,7 +36,7 @@
   .logo-link {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #111827;
+    color: #ffffff;
   }
   
   .desktop-menu {
@@ -50,7 +51,14 @@
   }
   
   .nav-link {
-    color: #4B5563;
+    color: #ffffff;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-link-red {
+    color: #d40606;
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 500;
@@ -58,7 +66,7 @@
   }
   
   .nav-link:hover {
-    color: #111827;
+    color: #eccfcf;
   }
   
   .cart-button {
@@ -68,6 +76,7 @@
   .cart-icon {
     width: 1.5rem;
     height: 1.5rem;
+    stroke: white;  /* toto nastaví barvu ikony na bílou */
   }
   
   .mobile-menu-button {

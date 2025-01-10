@@ -24,7 +24,7 @@ export function Header({ cart, setCart }: HeaderProps) {
                     </div>
 
                     <nav className="desktop-menu">
-                        <Link to="/products" className="nav-link">
+                        <Link to="/products" className="nav-link-red">
                             Buy Products Now
                         </Link>
                         <Link to="/about" className="nav-link">
