@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CartItem } from '../types/types';
 import { Cart } from '../Cart/Cart';
+import './Header.css';
 
 interface HeaderProps {
     cart: CartItem[],
@@ -9,41 +10,38 @@ interface HeaderProps {
 }
 
 export function Header({ cart, setCart }: HeaderProps) {
-
     const [isOpen, setIsOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     return (
-        <header className="bg-white shadow-sm">
-            <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
-                    <div className="flex-shrink-0">
-                        <a href="/" className="text-xl font-bold text-gray-900">
+        <header className="header">
+            <div className="header-container">
+                <div className="nav-wrapper">
+                    <div className="logo">
+                        <a href="/" className="logo-link">
                             YourShop
                         </a>
                     </div>
 
-                    {/* Desktop Menu */}
-                    <nav className="hidden md:flex space-x-8">
-                        <Link to="/products" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                    <nav className="desktop-menu">
+                        <Link to="/products" className="nav-link">
                             Buy Products Now
                         </Link>
-                        <Link to="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        <Link to="/about" className="nav-link">
                             About Us
                         </Link>
-                        <Link to="/terms" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        <Link to="/terms" className="nav-link">
                             Terms and Conditions
                         </Link>
-                        <Link to="/delivery" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                        <Link to="/delivery" className="nav-link">
                             Payment and Delivery
                         </Link>
                     </nav>
 
                     <div>
-                        <button onClick={() => setIsCartOpen(true)}>
+                        <button className="cart-button" onClick={() => setIsCartOpen(true)}>
                             <svg
-                                className="w-6 h-6"
+                                className="cart-icon"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -64,16 +62,15 @@ export function Header({ cart, setCart }: HeaderProps) {
                         )}
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
+                    <div>
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none"
+                            className="mobile-menu-button"
                         >
                             <span className="sr-only">Open main menu</span>
                             {!isOpen ? (
                                 <svg
-                                    className="h-6 w-6"
+                                    className="cart-icon"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
@@ -88,7 +85,7 @@ export function Header({ cart, setCart }: HeaderProps) {
                                 </svg>
                             ) : (
                                 <svg
-                                    className="h-6 w-6"
+                                    className="cart-icon"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
@@ -106,25 +103,22 @@ export function Header({ cart, setCart }: HeaderProps) {
                     </div>
                 </div>
 
-                {/* Mobile Menu Panel */}
-                {isOpen && (
-                    <div className="md:hidden">
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            <a href="/products" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                                Buy Products Now
-                            </a>
-                            <a href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                                About Us
-                            </a>
-                            <a href="/terms" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                                Terms and Conditions
-                            </a>
-                            <a href="/delivery" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                                Payment and Delivery
-                            </a>
-                        </div>
+                <div className={`mobile-menu ${isOpen ? 'active' : ''}`}>
+                    <div>
+                        <Link to="/products" className="mobile-menu-item">
+                            Buy Products Now
+                        </Link>
+                        <Link to="/about" className="mobile-menu-item">
+                            About Us
+                        </Link>
+                        <Link to="/terms" className="mobile-menu-item">
+                            Terms and Conditions
+                        </Link>
+                        <Link to="/delivery" className="mobile-menu-item">
+                            Payment and Delivery
+                        </Link>
                     </div>
-                )}
+                </div>
             </div>
         </header>
     );

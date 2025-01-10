@@ -3,6 +3,7 @@ import { Header } from "../Header/Header"
 import { Footer } from "../Footer/Footer"
 import { Aside } from "../Aside/Aside"
 import { CartItem } from "../types/types"
+import './Layout.css'
 
 interface LayoutProps {
     children: React.ReactNode,
@@ -22,15 +23,16 @@ export function Layout({ children, cart, setCart }: LayoutProps) { // children j
 
     return (
 
-        <div className="min-h-screen flex flex-col">
+        <div className="Layout">
             <Header cart={cart} setCart={setCart} />
+            <div className="main-container">
             <Aside />
-            <div className="flex flex-1">
-                <main className="flex-1">
+                <main className="middle-content">
                     {children} {/**toto se bude měnit podle toho na jakou routu klikne uživatel v */}
                 </main>
             </div>
             <Footer />
+
         </div>
 
     )

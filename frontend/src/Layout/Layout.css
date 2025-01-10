@@ -1,0 +1,18 @@
+.Layout {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto auto;
+    min-height: 100vh; /*layout je na celou výšku obrazovky*/
+}
+
+/*Teď budu muset rozdělit ten main ještě na 2 díly, aby se doleva vešel malý aside*/
+
+.main-container {
+    display: grid;
+    grid-template-columns: 15% 85%; /*zde naprosto jednoduše rozdělíme main na 85% a 15% na aside, takže jsem vytvořil dva sloupce, aby byl aside vlevo musí být jako element <aside> před <main> v jsx v layout.tsx*/
+}
+
+.middle-content {
+    background-color: rgba(243, 238, 238, 0.541);
+    height: 100%; /*ZAJISTÍME, ŽE SE BARVA ROZTÁHNE VŠUDE*/
+}
