@@ -24,7 +24,7 @@ function App() {
             {/* TOHLE VŠECHNO JE CHILDREN PROP PRO LAYOUT*/}
             <Routes>
               <Route path="/products" element={<ProductList setCart={setCart} cart={cart}/>} />
-              <Route path='/products/:id' element={<ProductDetail/>} />
+              <Route path='/products/:id' element={<ProductDetail setCart={setCart} cart={cart}/>} />
               <Route path="about" element ={<About/>} />
               <Route path="terms" element ={<Terms/>} />
               <Route path="delivery" element={<Delivery/>} />

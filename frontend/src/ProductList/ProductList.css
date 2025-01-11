@@ -1,0 +1,57 @@
+.productList-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    /* 
+    - auto-fit vytvoří automaticky sloupce
+    - minmax(min(300px, 100%), 1fr):
+      - minimum je buď 300px nebo 100% šířky na mobilu (co je menší)
+      - maximum je 1fr (rovnoměrné rozdělení)
+    - tím zajistíme max 3 produkty na řádek, protože při šířce containeru 
+      např. 1000px se vejdou jen 3 sloupce (3 × 300px)
+    */
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.each-product {
+    border: 0.5px groove rgba(0, 0, 0, 0.127);
+    text-align: center;
+    align-items: center;
+}
+
+.productList-container button {
+
+    background-color: rgb(0, 0, 0);
+    color: aliceblue;
+    border-radius: 4px;
+    padding: 5px;
+    justify-content: center; /*horizontal alignment*/
+    display: inline-flex; /* alow buttons to be inline */
+    align-items: center; /*vertical alignment*/
+    margin: 0 2px; 
+    
+
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.productList-container button:hover {
+    color: #d40606;
+}
+
+.product-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    margin: 0 auto;
+
+}

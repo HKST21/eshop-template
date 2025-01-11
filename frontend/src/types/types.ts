@@ -6,7 +6,7 @@ export interface Product {
     price: number,
     description: string,
     stockQuantity: number,
-    imageUrl: string
+    image_url: string
 
 };
 

@@ -1,0 +1,41 @@
+.productDescription-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column
+
+}
+
+.productDescription-container button {
+
+    background-color: rgb(0, 0, 0);
+    color: aliceblue;
+    border-radius: 4px;
+    padding: 5px;
+    justify-content: left; /*horizontal alignment*/
+    display: inline-flex; /* alow buttons to be inline */
+    align-items: center; /*vertical alignment*/
+    margin: 0 2px; 
+    
+
+}
+
+.product-image-desc {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    
+    flex-shrink: 0;
+    
+
+}
+
+.button-group-desc {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+}
+
+.productDescription-container button:hover {
+    color: #d40606;
+}

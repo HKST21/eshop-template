@@ -60,48 +60,104 @@ export class EshopBeClass {
     }
 
     async insertTestProducts() {
-        // Nejdřív zkontrolujeme, jestli už produkty existují
         const existingProducts = await this.getProducts();
-        if (existingProducts && existingProducts.length > 0) {
-            console.log('Produkty už existují, přeskakuji inicializaci');
-            return;
-        }
-    
+        
         const products = [
             { 
                 name: 'Iphone S21', 
-                price: 11990, 
+                price: 1990, 
                 description: 'Úplně nový Iphone S21Pro', 
                 stockQuantity: 1, 
-                imageUrl: "https://image.alza.cz/products/RI045b1/RI045b1-02.jpg?width=1000&height=1000" 
+                imageUrl: "/images/iphone.png" 
             },
             { 
                 name: 'Samsung L7', 
-                price: 10120, 
+                price: 820, 
                 description: 'Úplně nový Samsung L7, výkonný mobilní telefon z Koree', 
                 stockQuantity: 2, 
-                imageUrl: "https://image.alza.cz/products/SAMO0263b3/SAMO0263b3-09.jpg?width=1000&height=1000" 
+                imageUrl: "/images/samsung.png" 
+            },
+            {
+                name: 'Alcatel S19', 
+                price: 2990, 
+                description: 'Alcatel od francouzského výrobce, velmi kvalitní produkt pro důchodce', 
+                stockQuantity: 1, 
+                imageUrl: "/images/samsung2.png"
+            },
+            {
+                name: 'Xiaomi Redmi Note 12', 
+                price: 1990, 
+                description: 'Výkonný telefon střední třídy s kvalitním fotoaparátem a dlouhou výdrží baterie', 
+                stockQuantity: 3, 
+                imageUrl: "/images/iphone.png"
+            },
+            {
+                name: 'OnePlus Nord CE', 
+                price: 890, 
+                description: 'Elegantní smartphone s rychlým nabíjením a čistým Android systémem', 
+                stockQuantity: 2, 
+                imageUrl: "/images/samsung.png" 
+            },
+            {
+                name: 'Huawei P40 Lite', 
+                price: 690, 
+                description: 'Moderní telefon s kvalitním fotoaparátem a vlastním ekosystémem aplikací', 
+                stockQuantity: 4, 
+                imageUrl: "/images/samsung2.png"
+            },
+            {
+                name: 'Motorola Edge 30', 
+                price: 990, 
+                description: 'Prémiový telefon s 144Hz displejem a pokročilými funkcemi pro fotografy', 
+                stockQuantity: 1, 
+                imageUrl: "/images/iphone.png"
+            },
+            {
+                name: 'Vivo V25', 
+                price: 890, 
+                description: 'Stylový telefon s pokročilými selfie funkcemi a rychlým 5G připojením', 
+                stockQuantity: 2, 
+                imageUrl: "/images/samsung2.png"
+            },
+            {
+                name: 'Sony Xperia 5', 
+                price: 2990, 
+                description: 'Profesionální telefon s kinematografickým displejem a pokročilými funkcemi pro video', 
+                stockQuantity: 1, 
+                imageUrl: "/images/iphone.png"
             }
         ];
     
         const stmt = this.db.prepare('INSERT INTO products (name, price, description, stockQuantity, image_url) VALUES (?, ?, ?, ?, ?)');
     
         for (const product of products) {
-            await new Promise((resolve, reject) => {
-                stmt.run([
-                    product.name,
-                    product.price,
-                    product.description,
-                    product.stockQuantity,
-                    product.imageUrl
-                ], (err) => {
-                    if (err) reject(err);
-                    else resolve(true);
+            // Kontrola existence produktu
+            const exists = existingProducts.some(existingProduct => 
+                existingProduct.name === product.name
+            );
+    
+            if (!exists) {
+                await new Promise((resolve, reject) => {
+                    stmt.run([
+                        product.name,
+                        product.price,
+                        product.description,
+                        product.stockQuantity,
+                        product.imageUrl
+                    ], (err) => {
+                        if (err) reject(err);
+                        else {
+                            console.log(`Přidán nový produkt: ${product.name}`);
+                            resolve(true);
+                        }
+                    });
                 });
-            });
+            } else {
+                console.log(`Produkt ${product.name} už existuje, přeskakuji`);
+            }
         }
     
-        console.log('Testovací produkty byly úspěšně vloženy');
+        console.log('Kontrola a přidání testovacích produktů dokončena');
     };
 
     async createProduct(product: Product): Promise<number> {

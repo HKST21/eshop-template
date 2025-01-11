@@ -3,6 +3,9 @@ import eshop from "../class/eshopFeClass";
 import { Product } from "../types/types";
 import { CartItem } from "../types/types";
 import { Link } from "react-router-dom";
+import './ProductList.css'
+import { ShoppingCart } from 'lucide-react'
+
 
 interface ProductListProps {
     cart: CartItem[];
@@ -16,11 +19,28 @@ export function ProductList({ cart, setCart }: ProductListProps) {
         const loadProducts = async () => {
             const productsFromDb = await eshop.getProducts();
 
+            console.log('Products from DB:', productsFromDb); // uvidíme data včetně image_url
+
             setProducts(productsFromDb)
         };
 
+
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') { // if user is back on page, means document visibility state is visible we are loading products from backend
+                loadProducts();
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange); // checking if user changed visibility page, fex clicked to diff tab. If yes, function handleVisiblityChange is called
         loadProducts();
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+        }
     }, []);
+
+
 
     const handleAddToCart = (product: Product) => {
 
@@ -67,31 +87,44 @@ export function ProductList({ cart, setCart }: ProductListProps) {
     };
 
     return (
-        <div>
+        <div className="productList-container">
             {products ? products.map((product, i) => (
-                <div key={i}>
+                <div className="each-product" key={i}>
                     <Link to={`/products/${product.id}`}>
                         <div>
                             {product.name}
                             <p />
-                            {product.description}
+                            <span style={{ color: product.stockQuantity > 0 ? 'green' : '#d40606' }}>
+                                {product.stockQuantity > 0 ? 'in stock' : 'out of stock'}
+                            </span>
                             <p />
-                            {product.stockQuantity}
+                            € {product.price}
                             <p />
-                            {product.price}
-                            <p />
-                            {product.imageUrl}
+                            <img className="product-image"
+                                src={product.image_url}
+                                alt={product.name}
+                            >
+                            </img>
+
                         </div>
                     </Link>
                     <p />
-                    {product.stockQuantity > 0 ? (
-                        <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
-                    ) : (
-                        <button disabled>Add To Cart</button>
-                    )}
-                    {cart ? (
-                        <button onClick={() => handleRemoveFromCart(product.id)}>Remove from Cart</button>
-                    ) : null}
+                    <div className="button-group">
+                        {product.stockQuantity > 0 ? (
+                            <button onClick={() => handleAddToCart(product)}>
+                                <ShoppingCart size={25} />
+                                <span>TO CART</span>
+                            </button>
+                        ) : (
+                            <button disabled>
+                                <ShoppingCart size={20} />
+                                <span>TO CART</span>
+                            </button>
+                        )}
+                        {cart.some(item => product.id === item.product.id) ? (
+                            <button onClick={() => handleRemoveFromCart(product.id)}>REMOVE</button>
+                        ) : null}
+                    </div>
                     <p />
                 </div>
             )) : "Loading Products"}
