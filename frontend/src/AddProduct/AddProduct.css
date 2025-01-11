@@ -1,0 +1,16 @@
+.drop-zone {
+    border: 2px dashed #ccc;  /* přerušovaný rámeček */
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.drop-zone.dragging {
+    border-color: #000;
+    background-color: #f0f0f0;
+}
+
+.preview-pic {
+    border: 0.5px groove rgba(0, 0, 0, 0.127);
+}

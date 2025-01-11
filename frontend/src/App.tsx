@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ProductList } from './ProductList/ProductList'
 import { useState } from 'react'
 import { ProductDetail } from './ProductDetail/ProductDetail'
+import { AddProduct } from './AddProduct/AddProduct'
 
 
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="about" element ={<About/>} />
               <Route path="terms" element ={<Terms/>} />
               <Route path="delivery" element={<Delivery/>} />
+              <Route path='admin' element={<AddProduct/>} />
 
             </Routes>
             {/* ZDE KONČÍ CHILDREN PROP PRO LAYOUT*/}

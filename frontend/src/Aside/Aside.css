@@ -1,4 +1,39 @@
-.menu {
-    background-color: whitesmoke;
-    height: 100%; /*ZAJISTÍME, ŽE SE BARVA ROZTÁHNE VŠUDE*/
+.categories-aside {
+    padding: 5px;
+    background-color: whitesmoke;  /* stejné jako máte */
+    margin-right: 5px;           /* mezera od produktů */
+    width: 200px;                 /* fixní šířka */
+}
+
+/* Seznam kategorií */
+.categories-aside ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Jednotlivé položky */
+.categories-aside li {
+    margin-bottom: 12px;
+    padding: 8px;
+    transition: 0.2s;
+    color: #333;            /* tmavší text pro lepší čitelnost */
+}
+
+.categories-aside li:hover {
+    color: #d40606;        /* červená při hoveru - stejná jako máte v hlavičce */
+    cursor: pointer;
+    padding-left: 12px;    /* malý indent při hoveru */
+}
+
+/* Platební metody */
+.payment-methods {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.payment-methods p {
+    color: #333;
+    margin-bottom: 10px;
 }

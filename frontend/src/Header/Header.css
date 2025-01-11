@@ -70,14 +70,21 @@
   }
   
   .cart-button {
-    cursor: pointer;
-  }
+    display: flex;
+    align-items: center;
+    gap: 5px;  /* mezera mezi ikonou a číslem */
+    }   
+
+    .cart-button span {
+        color: #106931;  /* zelená barva */
+        font-weight: bold;
+    }
   
   .cart-icon {
     width: 1.5rem;
     height: 1.5rem;
     stroke: white;  /* toto nastaví barvu ikony na bílou */
-  }
+    }
   
   .mobile-menu-button {
     display: flex;
