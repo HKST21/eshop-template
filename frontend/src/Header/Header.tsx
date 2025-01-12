@@ -56,9 +56,9 @@ export function Header({ cart, setCart }: HeaderProps) {
                         </button>
 
                         {isCartOpen && (
-                            <div>
+                            
                                 <Cart cart={cart} setCart={setCart} onClose={() => setIsCartOpen(false)} />
-                            </div>
+                            
                         )}
                     </div>
 

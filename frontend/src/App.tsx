@@ -9,6 +9,7 @@ import { ProductList } from './ProductList/ProductList'
 import { useState } from 'react'
 import { ProductDetail } from './ProductDetail/ProductDetail'
 import { AddProduct } from './AddProduct/AddProduct'
+import { Checkout } from './Checkout/Checkout'
 
 
 
@@ -26,10 +27,11 @@ function App() {
             <Routes>
               <Route path="/products" element={<ProductList setCart={setCart} cart={cart}/>} />
               <Route path='/products/:id' element={<ProductDetail setCart={setCart} cart={cart}/>} />
-              <Route path="about" element ={<About/>} />
-              <Route path="terms" element ={<Terms/>} />
-              <Route path="delivery" element={<Delivery/>} />
-              <Route path='admin' element={<AddProduct/>} />
+              <Route path="/about" element ={<About/>} />
+              <Route path="/terms" element ={<Terms/>} />
+              <Route path="/delivery" element={<Delivery/>} />
+              <Route path='/admin' element={<AddProduct/>} />
+              <Route path='/checkout' element={<Checkout setCart={setCart} cart={cart}/>} />
 
             </Routes>
             {/* ZDE KONČÍ CHILDREN PROP PRO LAYOUT*/}

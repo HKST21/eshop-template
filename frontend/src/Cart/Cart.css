@@ -1,0 +1,68 @@
+.drawer-container {
+    position: fixed;
+    inset: 0;  /* zkratka pro top:0, right:0, bottom:0, left:0 */
+    z-index: 50;  /* musí být vyšší než header */
+}
+
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;     /* musí být nižší než drawer-content */
+}
+
+.drawer-content {
+    position: fixed;
+    top: 0;
+    right: 0;         /* důležité pro umístění na pravé straně */
+    width: 300px;     /* fixní šířka draweru */
+    height: 100vh;    /* plná výška */
+    background: white;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;    /* musí být vyšší než ostatní elementy */
+    background-color: whitesmoke;
+}
+
+.drawer-content button {
+
+    background-color: rgb(0, 0, 0);
+    color: aliceblue;
+    border-radius: 4px;
+    padding: 5px;
+    justify-content: center; /*horizontal alignment*/
+    display: inline-flex; /* alow buttons to be inline */
+    align-items: center; /*vertical alignment*/
+    margin: 0 2px; 
+    
+
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.drawer-content button:hover {
+    color: #d40606;
+}
+
+.each-item {
+    border: 0.5px groove rgba(0, 0, 0, 0.127);
+    text-align: left;
+    align-items: left;
+
+}
+
+h3 {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Pro umístění tlačítka vpravo */
+    align-items: center;
+    position: relative;
+    height: 64px; 
+}
