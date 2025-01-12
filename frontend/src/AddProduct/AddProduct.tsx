@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Product } from "../types/types"
 import './AddProduct.css'
+import eshop from "../class/eshopFeClass";
 
 
 
@@ -12,8 +13,34 @@ export function AddProduct() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
 
-    const handleAddProduct = () => {
-        console.log('I want add product')
+    const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
+
+        try {
+            const data = new FormData(e.currentTarget);
+
+        const newProduct = {
+            
+            name: data.get('name') as string,
+            price: Number(data.get('price')),
+            description: data.get('description') as string,
+            stockQuantity: Number(data.get('stock quantity')),
+            image_url: previewUrl as string
+
+        }
+        console.log('I want add product', newProduct);
+
+        await eshop.createProduct(newProduct)
+
+        }
+
+        catch(e) {
+            console.log('failed to add product', e)
+            throw e
+        }
+
+        
     }
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -27,7 +54,7 @@ export function AddProduct() {
 
         const file = upload[0] // něco jako pole, na prvnim indexu je prvni dropnutá věc
 
-        if ((file.type === "image/png" || "image/jpg") && (file.size < 5000000)) {
+        if ((file.type === "image/png" || file.type === "image/jpg") && (file.size < 5000000)) {
             setUploadedPic(file);
             setIsDragging(false);
         }

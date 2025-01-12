@@ -1,4 +1,4 @@
-import { CartItem, CustomerData, } from "../types/types";
+import { CartItem, CustomerData, Product, } from "../types/types";
 
 const BASE_URL = '/api';
 
@@ -108,8 +108,36 @@ class eshopFeClass {
         }
 
         catch (e) {
-            console.error('Error fetching tix and seatings', e);
+            console.error('Error fetching creating order', e);
             throw e
+
+        }
+
+    }
+
+    async createProduct(product : Product): Promise<Response> {
+
+        try {
+
+            const response = await fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+
+            if(!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`)
+            }
+
+            return response
+
+        }
+
+        catch (e) {
+            console.log("error fetching creating product", e)
+            throw e;
 
         }
 

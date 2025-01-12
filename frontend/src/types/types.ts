@@ -1,7 +1,7 @@
 /*
 interface musí odpovídat struktuře ve schema.sql datošce, kde to jsou sloupce v rámci CREATE TABLE **/
 export interface Product {
-    id: number,
+    id?: number,
     name: string,
     price: number,
     description: string,
