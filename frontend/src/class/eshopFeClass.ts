@@ -119,7 +119,7 @@ class eshopFeClass {
 
         try {
 
-            const response = await fetch('/api/products', {
+            const response = await fetch(`${BASE_URL}/products`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'

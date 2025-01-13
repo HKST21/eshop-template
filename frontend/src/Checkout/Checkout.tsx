@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { CartItem } from "../types/types"
 
@@ -23,6 +23,10 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
     const [showFinalConfirm, setShowFinalConfirm] = useState(false);
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+    const formRef = useRef<HTMLFormElement>(null); // vytvoříme referenci na inputy. nastavujeme počáteční hodnotu na null, protože na null nastavujeme, pokud neinicializujeme s nějakou pevnou hodnotou třeba na 0 u čísel jako časovač, ale hodnotu čteme až elementu (jako zde z inputu) které musí vytvořit dom. Jednoduše DOM elementy vytvoří react až po tom co čte kod, takže při prvnim čtení je to null.
+
+    // HTMLFormElement je element na který odkazuje ref
 
 
 
@@ -60,9 +64,9 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
 
                 setShowFinalConfirm(false);
 
+                setShowSuccessModal(true);
 
-
-                alert('✅ORDER WAS SUCCESFULLY ACCEPTED, YOU WILL RECEIE CONFIRMATION IN YOUR EMAIL');
+                formRef.current?.reset(); // current je aktuální hodnota ? protože můžeš být null při incializaci, reset() je metoda HTML formu
 
             }
 
@@ -117,16 +121,17 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
                         <h3>You added these products to your cart, please proceed further</h3>
                         {cart.map((item, i) => (
                             <div key={i} className="product-item">
-                                <div>{item.product.name}</div>
-                                <div>{item.product.price} EUR</div>
-                                <div>Amount: {item.quantity}</div>
+                                    <div>{item.product.name}</div>
+                                    <div>{item.product.price} EUR</div>
+                                    <div>Amount: {item.quantity}</div>
                             </div>
                         ))}
                     </div>
                 </div>
 
 
-                <form id="orderForm" onSubmit={handleConfirmOrder} >
+                <form id="orderForm" onSubmit={handleConfirmOrder} ref={formRef} >
+                    {/* POZOR VÝŠE MUSÍ BÝT ref připojena na proměnou s useRef!  */}
                     <div>YOUR DELIVERY DETAILS</div>
                     <input
                         type="text"

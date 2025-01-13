@@ -32,15 +32,13 @@ export function Cart({ cart, setCart, onClose }: CartProps) {
                     <p />
                     <h3>YOUR CART</h3>
                     {cart && cart?.map((item, i) => (
-                        <div className="each-item">
-                            <div key={i}>
+                        <div key={i} className="each-item">
                                 {item.product.name}
                                 <p />
                                 QUANTITY {item.quantity}
                                 <p />
                                 PRICE {item.product.price} EUR
                                 <p />
-                            </div>
                         </div>
                     ))}
                     <div>TOTAL AMOUNT TO PAY {totalPrice} EUR</div>
