@@ -24,6 +24,10 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+    const [zip, setZip] = useState<string>("");
+
+    const [zipValidation, setZipValidation] = useState("");
+
     const formRef = useRef<HTMLFormElement>(null); // vytvoříme referenci na inputy. nastavujeme počáteční hodnotu na null, protože na null nastavujeme, pokud neinicializujeme s nějakou pevnou hodnotou třeba na 0 u čísel jako časovač, ale hodnotu čteme až elementu (jako zde z inputu) které musí vytvořit dom. Jednoduše DOM elementy vytvoří react až po tom co čte kod, takže při prvnim čtení je to null.
 
     // HTMLFormElement je element na který odkazuje ref
@@ -79,6 +83,44 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
         }
 
 
+    }
+
+    const handleOnChangeZip = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        const inputZip = e.target.value;
+
+        setZip(inputZip)
+
+        
+
+    }
+
+    const handleOnBlurZip = () => {
+
+        const validateZip = () => {
+            
+            const cleanZip = zip.replace(/\s/g, '');
+
+            const zipRegex = /^[0-9]{5}$/;
+
+            if (!cleanZip) {
+                setZipValidation("ZIP is obligatory")
+            }
+
+            if (!zipRegex.test(cleanZip)) {
+                setZipValidation("ZIP format invalid")
+            }
+
+            if (cleanZip === "") {
+                setZipValidation("")
+            }
+
+            if(zipRegex.test(cleanZip)) {
+                setZipValidation("")
+            }
+        };
+
+        validateZip()
     }
 
 
@@ -161,6 +203,16 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
                         required>
                     </input>
                     <p />
+                    <input
+                    type="text"
+                    name="zipCode"
+                    placeholder="ZIP CODE"
+                    value={zip}
+                    onChange={handleOnChangeZip}
+                    onBlur={handleOnBlurZip}
+                    required>
+                    </input>
+                    {zipValidation !== "" && zipValidation }
                     <input className="inad"
                         type="text"
                         name="deliveryAddress"

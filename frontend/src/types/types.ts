@@ -14,7 +14,7 @@ export interface Product {
 export interface CartItem { // do vlastnosti produkt vnořím objekt product, který má podobnou strukturu jako v interfacu Product
     quantity: number,
     product: {
-        id: number,
+        id?: number,
         name: string,
         price: number,
         

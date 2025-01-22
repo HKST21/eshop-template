@@ -37,3 +37,11 @@
     color: #333;
     margin-bottom: 10px;
 }
+
+.searched-product:hover {
+    opacity: 0.5;
+
+}
+.searched-product {
+    transition: all 0.2s;
+}

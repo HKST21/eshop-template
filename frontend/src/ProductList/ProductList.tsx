@@ -9,39 +9,22 @@ import { ShoppingCart } from 'lucide-react'
 
 interface ProductListProps {
     cart: CartItem[];
-    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
+    products: Product[];
 }
 
-export function ProductList({ cart, setCart }: ProductListProps) {
-    const [products, setProducts] = useState<Product[] | undefined>([]);
+interface HoverState {
+    id: number | null;
+    visible: boolean;
+}
 
-    useEffect(() => {
-        const loadProducts = async () => {
-            const productsFromDb = await eshop.getProducts();
+export function ProductList({ cart, setCart, products }: ProductListProps) {
 
-            console.log('Products from DB:', productsFromDb); // uvidíme data včetně image_url
-
-            setProducts(productsFromDb)
-        };
-
-
-
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === 'visible') { // if user is back on page, means document visibility state is visible we are loading products from backend
-                loadProducts();
-            }
-        }
-
-        document.addEventListener('visibilitychange', handleVisibilityChange); // checking if user changed visibility page, fex clicked to diff tab. If yes, function handleVisiblityChange is called
-        loadProducts();
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange)
-        }
-    }, []);
-
-
-
+    const [picHovered, setPicHovered] = useState<HoverState>({
+        id: null,
+        visible: false
+    })
+    
     const handleAddToCart = (product: Product) => {
 
         if (product.stockQuantity <= 0) {
@@ -86,6 +69,20 @@ export function ProductList({ cart, setCart }: ProductListProps) {
         setCart(cart.filter(item => item.product.id !== productId));
     };
 
+    const handleOnMouseEnterImg = (id: number | undefined) => {
+        setPicHovered({
+            id: id ?? null,
+            visible: true
+        })
+    }
+
+    const handleOnMouseLeaveImg = (id: number | undefined) => {
+        setPicHovered({
+            id: id ?? null,
+            visible: false
+        })
+    }
+
     return (
         <div className="productList-container">
             {products ? products.map((product, i) => (
@@ -100,7 +97,10 @@ export function ProductList({ cart, setCart }: ProductListProps) {
                             <p />
                             € {product.price}
                             <p />
-                            <img className="product-image"
+                            <img 
+                            onMouseEnter={() => handleOnMouseEnterImg(product.id)} 
+                            onMouseLeave={() => handleOnMouseLeaveImg(product.id)} 
+                            className={`product-image ${picHovered.id === product.id && picHovered.visible ? "product-image-hovered" : ""}`}
                                 src={product.image_url}
                                 alt={product.name}
                             >
@@ -122,7 +122,7 @@ export function ProductList({ cart, setCart }: ProductListProps) {
                             </button>
                         )}
                         {cart.some(item => product.id === item.product.id) ? (
-                            <button onClick={() => handleRemoveFromCart(product.id)}>REMOVE</button>
+                            <button onClick={() => handleRemoveFromCart(product.id as number)}>REMOVE</button>
                         ) : null}
                     </div>
                     <p />

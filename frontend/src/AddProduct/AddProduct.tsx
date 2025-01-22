@@ -89,6 +89,10 @@ export function AddProduct() {
         };
     }, [previewUrl]);
 
+    const handleOnFocus = () => {
+        console.log("onFocus spuštěn")
+    }
+
 
 
 
@@ -99,6 +103,7 @@ export function AddProduct() {
                 <p />
                 <div>NEW PRODUCT</div>
                 <input
+                
                     name="name"
                     type="text"
                     placeholder="product name"

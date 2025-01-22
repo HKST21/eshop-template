@@ -2,19 +2,20 @@ import React from "react"
 import { Header } from "../Header/Header"
 import { Footer } from "../Footer/Footer"
 import { Aside } from "../Aside/Aside"
-import { CartItem } from "../types/types"
+import { CartItem, Product } from "../types/types"
 import './Layout.css'
 
 interface LayoutProps {
     children: React.ReactNode,
     cart: CartItem[],
     setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
+    products: Product[]
 }
 
 // layout jurčuje strukturu celé stránky a exportujeme ho do app
 
 
-export function Layout({ children, cart, setCart }: LayoutProps) { // children je speciální prop v Reactu, který představuje veškerý obsah mezi otevíracím a zavíracím tagem komponenty. V našem případě díky children. propu můžeme do Layoutu (mezi Header a Footer) vložit různé stránky pomocí React Routeru. Layoutu předávám props tím, že je to všechno co je v App.tsx mezi tagy <Layout></Layout> Je to jako byste řekli:
+export function Layout({ children, cart, setCart, products }: LayoutProps) { // children je speciální prop v Reactu, který představuje veškerý obsah mezi otevíracím a zavíracím tagem komponenty. V našem případě díky children. propu můžeme do Layoutu (mezi Header a Footer) vložit různé stránky pomocí React Routeru. Layoutu předávám props tím, že je to všechno co je v App.tsx mezi tagy <Layout></Layout> Je to jako byste řekli:
 
     //Layout je šablona stránky (header, main, footer)
     //V main části je placeholder {children}
@@ -26,7 +27,7 @@ export function Layout({ children, cart, setCart }: LayoutProps) { // children j
         <div className="Layout">
             <Header cart={cart} setCart={setCart} />
             <div className="main-container">
-            <Aside />
+            <Aside products={products} />
                 <main className="middle-content">
                     {children} {/**toto se bude měnit podle toho na jakou routu klikne uživatel v */}
                 </main>
