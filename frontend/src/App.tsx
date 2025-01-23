@@ -11,6 +11,7 @@ import { ProductDetail } from './ProductDetail/ProductDetail'
 import { AddProduct } from './AddProduct/AddProduct'
 import { Checkout } from './Checkout/Checkout'
 import eshop from './class/eshopFeClass'
+import { Registration } from './Registration/Registration'
 
 
 
@@ -52,6 +53,7 @@ function App() {
               <Route path="/delivery" element={<Delivery />} />
               <Route path='/admin' element={<AddProduct />} />
               <Route path='/checkout' element={<Checkout setCart={setCart} cart={cart} />} />
+              <Route path='/registration' element={<Registration/>} />
 
             </Routes>
             {/* ZDE KONČÍ CHILDREN PROP PRO LAYOUT*/}

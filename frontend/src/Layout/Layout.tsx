@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Header } from "../Header/Header"
 import { Footer } from "../Footer/Footer"
 import { Aside } from "../Aside/Aside"
@@ -22,10 +22,37 @@ export function Layout({ children, cart, setCart, products }: LayoutProps) { // 
     //A do toho placeholderu se vloží cokoliv, co dáte mezi <Layout> tagy
     //V našem případě tam dáváme Routes, které řídí, jaká komponenta se tam má vložit podle URL
 
+    const [stickyHeader, setStickyHeader] = useState<boolean>(false);
+
+
+    useEffect(() => {
+
+        const handleScroll = () => {
+
+            const scrolledDistance = window.scrollY
+
+            if (scrolledDistance > 100) {
+                setStickyHeader(true)
+            }
+            else {
+                setStickyHeader(false)
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    },[])
+
     return (
 
+
+        
+
         <div className="Layout">
-            <Header cart={cart} setCart={setCart} />
+            <Header cart={cart} setCart={setCart} stickyHeader={stickyHeader} />
             <div className="main-container">
             <Aside products={products} />
                 <main className="middle-content">

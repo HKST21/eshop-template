@@ -54,6 +54,8 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
             phoneNumber: Number(formData.get('phoneNumber')), //warn
             deliveryAddress: formData.get('deliveryAddress') as string
 
+            //TODO: vyřešit, aby se posílal na backend i zip code
+
 
         }
 
@@ -197,7 +199,7 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
                     </input>
                     <p />
                     <input
-                        type="number"
+                        type="text"
                         name="phoneNumber"
                         placeholder="PHONE NUMBER"
                         required>

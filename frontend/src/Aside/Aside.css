@@ -39,9 +39,31 @@
 }
 
 .searched-product:hover {
-    opacity: 0.5;
+    color: rgb(113, 115, 115);
+    transition: 0.4s
+}
+
+.searched-product .highlighted-search-result {
+    border: 1px solid;
+}
+
+button {
+
+    background-color: rgb(0, 0, 0);
+    color: aliceblue;
+    border-radius: 4px;
+    padding: 5px;
+    justify-content: center; /*horizontal alignment*/
+    display: inline-flex; /* alow buttons to be inline */
+    align-items: center; /*vertical alignment*/
+    margin: 0 2px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    
 
 }
-.searched-product {
-    transition: all 0.2s;
-}
+
+
+

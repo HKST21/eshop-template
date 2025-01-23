@@ -7,14 +7,15 @@ import './Header.css';
 interface HeaderProps {
     cart: CartItem[],
     setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+    stickyHeader: boolean
 }
 
-export function Header({ cart, setCart }: HeaderProps) {
+export function Header({ cart, setCart, stickyHeader }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     return (
-        <header className="header">
+        <header className={`header ${stickyHeader ? "sticky" : ""}`}>
             <div className="header-container">
                 <div className="nav-wrapper">
                     <div className="logo">
