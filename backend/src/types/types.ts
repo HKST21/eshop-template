@@ -4,22 +4,22 @@ export interface Product {
     id: number,
     name: string,
     price: number,
+    discount?: number,
     description: string,
     stockQuantity: number,
-    imageUrl: string
+    image_url: string,
+    final_price?: number  // Přidáme pole pro vypočítanou cenu po slevě
+}
 
-};
-
-export interface CartItem { // do vlastnosti produkt vnořím objekt product, který má podobnou strukturu jako v interfacu Product
+export interface CartItem {
     quantity: number,
     product: {
         id: number,
         name: string,
         price: number,
-        
+        discount?: number  // přidáme discount i do košíku
     }
-    
-};
+}
 
 // Interface pro jednu položku v objednávce
 export interface OrderItem {

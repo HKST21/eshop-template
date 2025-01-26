@@ -4,7 +4,8 @@ CREATE TABLE products (
     price REAL NOT NULL,
     description TEXT,
     stockQuantity INTEGER NOT NULL DEFAULT 0,
-    image_url TEXT
+    image_url TEXT,
+    discount INTEGER DEFAULT 0
 );
 
 CREATE TABLE customers (

@@ -24,6 +24,7 @@ export function AddProduct() {
             
             name: data.get('name') as string,
             price: Number(data.get('price')),
+            discount: Number(data.get('discount')),
             description: data.get('description') as string,
             stockQuantity: Number(data.get('stock quantity')),
             image_url: previewUrl as string
@@ -89,9 +90,7 @@ export function AddProduct() {
         };
     }, [previewUrl]);
 
-    const handleOnFocus = () => {
-        console.log("onFocus spuštěn")
-    }
+
 
 
 
@@ -116,6 +115,12 @@ export function AddProduct() {
                     type="number"
                     placeholder="price in eur"
                     required>
+                </input>
+                <p/>
+                <input
+                name="discount"
+                type="number"
+                placeholder="discount in %">
                 </input>
                 <p />
                 <textarea

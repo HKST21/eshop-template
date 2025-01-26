@@ -22,12 +22,14 @@ interface HoverState {
 
 export function ProductList({ cart, setCart, products }: ProductListProps) {
 
-    const [isLoaded, setIsLoaded] = useState<{[key: number]: boolean}>({})
+    const [isLoaded, setIsLoaded] = useState<{ [key: number]: boolean }>({})
 
     const [picHovered, setPicHovered] = useState<HoverState>({
         id: null,
         visible: false
     })
+
+    console.log("produkty", products)
 
     const handleAddToCart = (product: Product) => {
 
@@ -87,13 +89,15 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
         })
     }
 
-    const handleLoaded = (ide: number | undefined ) => {
 
-        if (ide) {
-            setIsLoaded({[ide]: true})
+
+    const handleLoaded = (id: number | undefined) => {
+
+        if (id) {
+            setIsLoaded({ [id]: true })
         }
 
-        
+
     }
 
     /*React vytvoří JSX elementy, ale ještě nenačítá obrázky
@@ -118,13 +122,28 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
                 <div className="each-product" key={i}>
                     <Link to={`/products/${product.id}`}>
                         <div>
-                            {product.name}
+                            <div className="product-head-container">
+                                <div className="left-column"></div>
+                                <div className="center-column">{product.name}</div>
+                                {product.discount && product.discount > 1 ? <div className="right-column">-{product.discount}%</div> : 
+                                null}
+                            </div>
                             <p />
                             <span style={{ color: product.stockQuantity > 0 ? 'green' : '#d40606' }}>
                                 {product.stockQuantity > 0 ? 'in stock' : 'out of stock'}
                             </span>
                             <p />
-                            € {product.price}
+                            {product.discount && product.discount > 1 ? (
+                                <div className="price-container">
+                                    <div className="price-striked">
+                                        € {product.price}
+                                    </div>
+                                    <div className="final-price">
+                                        € {product.final_price}
+                                    </div>
+                                </div>
+                            ) : (<div>€ {product.price}</div>)}
+
                             <p />
                             <img
                                 onLoad={() => handleLoaded(product.id)}
@@ -136,9 +155,9 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
                                 src={product.image_url}
                                 alt={product.name}
 
-                            >
-                            </img>
-                           {product.id && isLoaded[product.id] === false && <div>loading bar</div>}
+                            />
+
+
 
                         </div>
                     </Link>
@@ -161,7 +180,7 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
                     </div>
                     <p />
                 </div>
-            )) : "Loading Products"}
+            )) : <div className="loading-spinner"></div>}
         </div>
     );
 }

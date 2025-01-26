@@ -1,26 +1,26 @@
 /*
 interface musí odpovídat struktuře ve schema.sql datošce, kde to jsou sloupce v rámci CREATE TABLE **/
 export interface Product {
-    id?: number,
+    id: number,
     name: string,
     price: number,
+    discount?: number,
     description: string,
     stockQuantity: number,
-    image_url: string
+    image_url: string,
+    final_price?: number  // Přidáme pole pro vypočítanou cenu po slevě
+}
 
-};
 
-
-export interface CartItem { // do vlastnosti produkt vnořím objekt product, který má podobnou strukturu jako v interfacu Product
+export interface CartItem {
     quantity: number,
     product: {
-        id?: number,
+        id: number,
         name: string,
         price: number,
-        
+        discount?: number  // přidáme discount i do košíku
     }
-    
-};
+}
 
 // Interface pro jednu položku v objednávce
 export interface OrderItem {
@@ -43,7 +43,7 @@ export interface CustomerData {
     firstName: string,
     lastName: string,
     email: string,
-    phoneNumber: number,
+    phoneNumber: string,
     deliveryAddress: string,
     password?: string
 
