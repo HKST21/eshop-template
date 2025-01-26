@@ -18,13 +18,17 @@ interface HoverState {
     visible: boolean;
 }
 
+
+
 export function ProductList({ cart, setCart, products }: ProductListProps) {
+
+    const [isLoaded, setIsLoaded] = useState<{[key: number]: boolean}>({})
 
     const [picHovered, setPicHovered] = useState<HoverState>({
         id: null,
         visible: false
     })
-    
+
     const handleAddToCart = (product: Product) => {
 
         if (product.stockQuantity <= 0) {
@@ -83,6 +87,31 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
         })
     }
 
+    const handleLoaded = (ide: number | undefined ) => {
+
+        if (ide) {
+            setIsLoaded({[ide]: true})
+        }
+
+        
+    }
+
+    /*React vytvoří JSX elementy, ale ještě nenačítá obrázky
+    Atribut loading="lazy" říká prohlížeči, aby načetl obrázek až když se blíží k viewportu
+    Když se obrázek skutečně načte (stáhne), teprve pak se zavolá onLoad handler
+    Handler nastaví stav isLoaded[id] na true a pak se řeší podmínka u každého jednotlivého produktu a podle toho zobrazuje obrázek či loading. Prvotním impulsem je le ten lazy loading atribut, který spustí serii funkcí a podmínek.*/
+
+    /*Na začátku je loading bar
+    Při přiblížení k viewportu (scroll) se:
+
+    Začne načítat obrázek (lazy loading)
+    Po načtení se spustí onLoad
+    Handler nastaví isLoaded[id] na true
+    Zmizí loading bar
+    Zobrazí se obrázek
+
+    Každý obrázek prochází tímto procesem nezávisle.*/
+
     return (
         <div className="productList-container">
             {products ? products.map((product, i) => (
@@ -97,14 +126,19 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
                             <p />
                             € {product.price}
                             <p />
-                            <img 
-                            onMouseEnter={() => handleOnMouseEnterImg(product.id)} 
-                            onMouseLeave={() => handleOnMouseLeaveImg(product.id)} 
-                            className={`product-image ${picHovered.id === product.id && picHovered.visible ? "product-image-hovered" : ""}`}
+                            <img
+                                onLoad={() => handleLoaded(product.id)}
+                                loading="lazy"
+                                onMouseEnter={() => handleOnMouseEnterImg(product.id)}
+                                onMouseLeave={() => handleOnMouseLeaveImg(product.id)}
+                                className={`product-image ${picHovered.id === product.id && picHovered.visible ? "product-image-hovered" : ""}`}
+
                                 src={product.image_url}
                                 alt={product.name}
+
                             >
                             </img>
+                           {product.id && isLoaded[product.id] === false && <div>loading bar</div>}
 
                         </div>
                     </Link>

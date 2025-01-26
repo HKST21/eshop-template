@@ -44,7 +44,8 @@ export interface CustomerData {
     lastName: string,
     email: string,
     phoneNumber: number,
-    deliveryAddress: string
+    deliveryAddress: string,
+    password?: string
 
 };
 
