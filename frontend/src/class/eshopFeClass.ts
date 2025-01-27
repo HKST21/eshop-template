@@ -115,16 +115,15 @@ class eshopFeClass {
 
     }
 
-    async createProduct(product : Product): Promise<Response> {
+    async createProduct(product : FormData): Promise<Response> {
 
         try {
+            console.log('create product called')
 
             const response = await fetch(`${BASE_URL}/products`, {
                 method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(product)
+                                // form data nepotřebuje hlavičku
+                body: product
             });
 
             if(!response.ok) {

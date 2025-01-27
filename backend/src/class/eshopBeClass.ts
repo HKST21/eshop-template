@@ -1,5 +1,7 @@
 import sqlite3 from 'sqlite3';  // Import SQLite knihovny
 import { Product, CartItem, Order, OrderItem, CustomerData } from '../types/types';  // Import interface pro produkt
+import fs from 'fs';
+import path from 'path';
 
 export class EshopBeClass {
     private db: sqlite3.Database;  // Instance databáze (private = přístupná jen uvnitř třídy)
@@ -58,6 +60,34 @@ export class EshopBeClass {
                 }
             });
         });
+    }
+
+    private async saveImage(imageBuffer: Buffer, fileName: string): Promise<string> {
+        try {
+            // Upravíme cestu tak, aby směřovala do frontend/public/images
+            const imagesDir = path.join(process.cwd(), '../frontend/public/images');
+            
+            console.log('Path to images directory:', imagesDir); // Pro kontrolu cesty
+            
+            // Vytvoříme složku images, pokud neexistuje
+            if (!fs.existsSync(imagesDir)) {
+                fs.mkdirSync(imagesDir, { recursive: true });
+            }
+    
+            // Vytvoříme unikátní název souboru
+            const fileExtension = path.extname(fileName);
+            const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(7)}${fileExtension}`;
+            const filePath = path.join(imagesDir, uniqueFileName);
+    
+            // Zapíšeme soubor
+            await fs.promises.writeFile(filePath, imageBuffer);
+    
+            // Vrátíme URL cestu k obrázku ve stejném formátu jako existující obrázky
+            return `/images/${uniqueFileName}`;
+        } catch (error) {
+            console.error('Chyba při ukládání obrázku:', error);
+            throw error;
+        }
     }
 
     async insertTestProducts() {
@@ -164,25 +194,39 @@ export class EshopBeClass {
         console.log('Kontrola a přidání testovacích produktů dokončena');
     };
 
-    async createProduct(product: Product): Promise<number> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                // Přidáváme discount do SQL dotazu
-                'INSERT INTO products (name, price, description, stockQuantity, image_url, discount) VALUES (?, ?, ?, ?, ?, ?)',
-                [
-                    product.name,
-                    product.price,
-                    product.description,
-                    product.stockQuantity,
-                    product.image_url,
-                    product.discount || 0  // Pokud není discount definován, použije se 0
-                ],
-                function (err) {
-                    if (err) reject(err);
-                    resolve(this.lastID);
-                }
-            );
-        });
+    async createProduct(product: Product, imageFile?: Buffer, imageFileName?: string): Promise<number> {
+        try {
+            let imagePath = product.image_url;
+            
+            // Pokud máme nový obrázek, uložíme ho
+            if (imageFile && imageFileName) {
+                imagePath = await this.saveImage(imageFile, imageFileName);
+            }
+    
+            return new Promise((resolve, reject) => {
+                this.db.run(
+                    'INSERT INTO products (name, price, description, stockQuantity, image_url, discount) VALUES (?, ?, ?, ?, ?, ?)',
+                    [
+                        product.name,
+                        product.price,
+                        product.description,
+                        product.stockQuantity,
+                        imagePath,
+                        product.discount || 0
+                    ],
+                    function (err) {
+                        if (err) {
+                            console.error('Chyba při vytváření produktu:', err);
+                            reject(err);
+                        }
+                        resolve(this.lastID);
+                    }
+                );
+            });
+        } catch (error) {
+            console.error('Chyba při vytváření produktu:', error);
+            throw error;
+        }
     }
 
     async getProducts(): Promise<Product[]> {
@@ -220,6 +264,8 @@ export class EshopBeClass {
             );
         });
     }
+
+    
 
     /**
      * Validuje dostupnost všech položek v košíku před vytvořením objednávky

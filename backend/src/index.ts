@@ -1,14 +1,32 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { EshopBeClass } from "./class/eshopBeClass";
+import multer from 'multer';
 
 
 const app = express();
 const port = process.env.PORT || 3010;
 
+const upload = multer({
+    storage: multer.memoryStorage(),  // Ukládáme soubor do paměti
+    limits: {
+        fileSize: 5 * 1024 * 1024  // Omezení velikosti souboru na 5MB
+    },
+    fileFilter: (req, file, cb) => {
+        // Povolíme pouze obrázky
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            cb(new Error('Pouze obrázky jsou povoleny!'));
+        }
+    }
+});
+
 // Middleware
-app.use(cors());  // Povolení CORS pro frontend
-app.use(express.json());  // Parsování JSON v body
+app.use(cors());
+app.use(express.json());  // Pro JSON data
+app.use(express.static('public'));  // Pro servírování statických souborů (obrázků)
 
 // Inicializace instance třídy pro práci s databází
 const eshopBe = new EshopBeClass();
@@ -65,11 +83,13 @@ app.get('/api/products/:id', async (req: Request, res: Response) => {
 });
 
 // POST vytvoření produktu
-app.post('/api/products', async (req: Request, res: Response) => {
+app.post('/api/products', upload.single('image'), async (req: Request, res: Response) => {
     try {
-        const createdProduct = req.body;
 
-        const newAddedProduct = await eshopBe.createProduct(createdProduct);
+        const productData = JSON.parse(req.body.product);
+
+
+        const newAddedProduct = await eshopBe.createProduct(productData, req.file?.buffer, req.file?.originalname);
 
         res.json(newAddedProduct)
     }

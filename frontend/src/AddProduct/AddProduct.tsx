@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { Product } from "../types/types"
 import './AddProduct.css'
 import eshop from "../class/eshopFeClass";
 
@@ -7,10 +6,12 @@ import eshop from "../class/eshopFeClass";
 
 export function AddProduct() {
 
-    const [newProduct, setNewProduct] = useState<Product>();
+    
     const [isDragging, setIsDragging] = useState(false);
     const [uploadedPic, setUploadedPic] = useState<File>();
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [formKey, setFormKey] = useState(0);
+    const [confirmation, setConfirmation] = useState<boolean>(false)
 
 
     const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,18 +22,27 @@ export function AddProduct() {
             const data = new FormData(e.currentTarget);
 
         const newProduct = {
-            
+            id: Math.random() ,
             name: data.get('name') as string,
             price: Number(data.get('price')),
             discount: Number(data.get('discount')),
             description: data.get('description') as string,
             stockQuantity: Number(data.get('stock quantity')),
-            image_url: previewUrl as string
+            image_url: '',
 
         }
-        console.log('I want add product', newProduct);
+        
+        data.append('product', JSON.stringify(newProduct)); // do objektu data ve formátu formData přidávám vlastnost product jejíž hodnota je stringyfikovanej newProduct
+        console.log('uploaded pic: ', uploadedPic)
+        if (uploadedPic) {
+            data.append('image', uploadedPic) // do objektu vkládám další vlastnost, která je už nahraný obrázek. Potřebujeme ho dostat na server a formData nám to umožní
+        }
+        
+        console.log('formdata object: ', data)
+        await eshop.createProduct(data)
 
-        await eshop.createProduct(newProduct)
+        setConfirmation(true)
+        setTimeout(() => setConfirmation(false), 2000)
 
         }
 
@@ -40,6 +50,8 @@ export function AddProduct() {
             console.log('failed to add product', e)
             throw e
         }
+
+        setTimeout(() => setFormKey(prev => prev + 1), 2000) // vynutím reset formu
 
         
     }
@@ -98,7 +110,7 @@ export function AddProduct() {
     return (
         <div>
             <h2>Welcome to Adding Product administration</h2>
-            <form onSubmit={handleAddProduct}>
+            <form onSubmit={handleAddProduct} key={formKey}>
                 <p />
                 <div>NEW PRODUCT</div>
                 <input
@@ -150,6 +162,8 @@ export function AddProduct() {
                     onDragLeave={handleLeave}
                 >Drag & drop image here</div>
                 <p />
+                {confirmation && <>
+                PRODUCT ADDED</>}
 
                 {previewUrl &&
                     (<div>

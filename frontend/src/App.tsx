@@ -19,7 +19,8 @@ function App() {
 
   const [cart, setCart] = useState<CartItem[]>([]); // inicialize with empty array
 
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>([]);
+  
 
 
   useEffect(() => {
