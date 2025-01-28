@@ -52,7 +52,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/delivery" element={<Delivery />} />
-              <Route path='/admin' element={<AddProduct />} />
+              <Route path='/admin' element={<AddProduct products={products} />} />
               <Route path='/checkout' element={<Checkout setCart={setCart} cart={cart} />} />
               <Route path='/registration' element={<Registration/>} />
 

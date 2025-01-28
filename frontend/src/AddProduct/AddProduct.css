@@ -14,3 +14,23 @@
 .preview-pic {
     border: 0.5px groove rgba(0, 0, 0, 0.127);
 }
+
+.button-container {
+    display: flex;
+    gap: 7px;
+    
+}
+
+button {
+    transition: 0.2s;
+}
+
+button:hover {
+    color: #d40606;
+}
+
+.edit-product {
+    display: flex;
+    gap: 10px;
+    border: solid 1px;
+}
