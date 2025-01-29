@@ -20,16 +20,16 @@ export function AddProduct({ products }: AddProductProps) {
 
     });
     const [editableProduct, setEditableProduct] = useState({
-        
+
         name: "",
         price: 0,
         discount: 0,
         stockQuantity: 0,
         description: ""
-        
+
     })
 
-    
+
 
 
     const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -134,18 +134,17 @@ export function AddProduct({ products }: AddProductProps) {
                 discount: productToEdit.discount ?? 0,
                 stockQuantity: productToEdit.stockQuantity,
                 description: productToEdit.description
-    
+
             })
 
         }
-        
+
 
         if (id) {
             setShowEdit({
                 [id]: true
             })
         }
-
 
         console.log("po zavolání handleru vypadá showedit takhle", showEdit)
 
@@ -167,13 +166,15 @@ export function AddProduct({ products }: AddProductProps) {
 
         console.log(editableProduct)
 
+    }
+
+    const handleSave = (id: number) => {
+
+        eshop.editProduct(id, editableProduct)
         
-
-
-        
-
-       
-
+        setTimeout(()=> setShowEdit({
+            [id]: false
+        }), 2000)
     }
 
 
@@ -269,47 +270,49 @@ export function AddProduct({ products }: AddProductProps) {
                                 {product.final_price}
                                 {product.stockQuantity}
                                 {product.description}
-                                
-                                <button onClick={() => handleShowEdit(product.id)}>edit</button>
+
+                                <button onClick={() => handleShowEdit(product.id)}>🖊️</button>
 
                             </div>
-                            {showEdit[product.id] === true &&
-                                <form>
+                            {showEdit[product.id] === true ? (
+                                <div>
                                     <input
-                                    type="text"
-                                    name="name"
-                                    placeholder="product name"
-                                    onChange={handleEditProduct}
-                                    value={editableProduct.name}
+                                        type="text"
+                                        name="name"
+                                        placeholder="product name"
+                                        onChange={handleEditProduct}
+                                        value={editableProduct.name}
                                     />
                                     <input
-                                    type="number"
-                                    name="price"
-                                    placeholder="price"
-                                    onChange={handleEditProduct}
-                                    value={editableProduct.price}
+                                        type="number"
+                                        name="price"
+                                        placeholder="price"
+                                        onChange={handleEditProduct}
+                                        value={editableProduct.price}
                                     />
                                     <input
-                                    type="number"
-                                    name="discount"
-                                    placeholder="discount in %"
-                                    onChange={handleEditProduct}
-                                    value={editableProduct.discount}
+                                        type="number"
+                                        name="discount"
+                                        placeholder="discount in %"
+                                        onChange={handleEditProduct}
+                                        value={editableProduct.discount}
                                     />
                                     <input
-                                    type="number"
-                                    name="stockQuantity"
-                                    placeholder="new stock quantity"
-                                    onChange={handleEditProduct}
-                                    value={editableProduct.stockQuantity}
+                                        type="number"
+                                        name="stockQuantity"
+                                        placeholder="new stock quantity"
+                                        onChange={handleEditProduct}
+                                        value={editableProduct.stockQuantity}
                                     />
                                     <textarea
-                                    placeholder="description"
-                                    name="description"
-                                    onChange={handleEditProduct}
-                                    value={editableProduct.description}
+                                        placeholder="description"
+                                        name="description"
+                                        onChange={handleEditProduct}
+                                        value={editableProduct.description}
                                     />
-                                </form>}
+                                    <button onClick={() => handleSave(product.id)}>💾</button>
+                                </div>
+                            ) : null}
                         </div>
                     ))}
 

@@ -11,42 +11,6 @@ class eshopFeClass {
 
     }
 
-    async addToCart(productId: number): Promise<void> {
-        try {
-
-            const response = await fetch(`${BASE_URL}/products/${productId}`);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch product with id ${productId}`);
-            };
-
-            const product = await response.json();
-
-            const cartItem = { // CartItem typ má jinou strukturu než product na BE, proto vytvoříme nový objekt, který pak pushneme do pole.
-                quantity: 1,
-                product: {
-                    id: product.id,
-                    name: product.name,
-                    price: product.price
-                }
-            }
-
-            this.cart.push(cartItem);
-
-        }
-
-        catch (e) {
-            console.error("error fetching add to Cart")
-        }
-
-    };
-
-    removeFromCart(productId: number): void {
-
-        this.cart = this.cart.filter((item) => item.product.id !== productId); // modifiyng of array directly with filter method, which filters out item by productId. technically new arr.
-
-
-    }
 
     async getProducts() {
         try {
@@ -126,11 +90,11 @@ class eshopFeClass {
                 body: product
             });
 
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`)
             }
 
-            return response
+            return await response.json();
 
         }
 
@@ -141,6 +105,40 @@ class eshopFeClass {
         }
 
     }
+
+    async editProduct (id: number, product: Object) : Promise<Response>  {
+
+        try {
+            console.log("Chceme editovat tento produkt", product)
+            const response = await fetch(`${BASE_URL}/products/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-type' : 'application/json'
+                },
+                body: JSON.stringify(product)
+            }
+                
+            )
+
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`)
+            }
+
+            return await response.json();
+
+        }
+        
+
+        catch (e) {
+            console.error("failed to post editedProduct to endpoint", e)
+            throw e
+        }
+
+        
+
+    }
+
+    
 
 
 

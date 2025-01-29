@@ -22,7 +22,8 @@ export class EshopBeClass {
                     description TEXT,
                     stockQuantity INTEGER NOT NULL DEFAULT 0,
                     image_url TEXT,
-                    discount INTEGER DEFAULT 0
+                    discount INTEGER DEFAULT 0,
+                    category TEXT NOT NULL  
                 );
     
                 CREATE TABLE IF NOT EXISTS customers (
@@ -100,7 +101,8 @@ export class EshopBeClass {
                 description: 'Úplně nový Iphone S21Pro',
                 stockQuantity: 1,
                 image_url: "/images/iphone.png",
-                discount: 10
+                discount: 10,
+                category: "servers"
             },
             {
                 name: 'Samsung L7',
@@ -108,60 +110,68 @@ export class EshopBeClass {
                 description: 'Úplně nový Samsung L7, výkonný mobilní telefon z Koree',
                 stockQuantity: 2,
                 image_url: "/images/samsung.png",
-                discount: 15
+                discount: 15,
+                category: "servers"
             },
             {
                 name: 'Alcatel S19',
                 price: 2990,
                 description: 'Alcatel od francouzského výrobce, velmi kvalitní produkt pro důchodce',
                 stockQuantity: 1,
-                image_url: "/images/samsung2.png"
+                image_url: "/images/samsung2.png",
+                category: "servers"
             },
             {
                 name: 'Xiaomi Redmi Note 12',
                 price: 1990,
                 description: 'Výkonný telefon střední třídy s kvalitním fotoaparátem a dlouhou výdrží baterie',
                 stockQuantity: 3,
-                image_url: "/images/iphone.png"
+                image_url: "/images/iphone.png",
+                category: "servers"
             },
             {
                 name: 'OnePlus Nord CE',
                 price: 890,
                 description: 'Elegantní smartphone s rychlým nabíjením a čistým Android systémem',
                 stockQuantity: 2,
-                image_url: "/images/samsung.png"
+                image_url: "/images/samsung.png",
+                category: "servers"
             },
             {
                 name: 'Huawei P40 Lite',
                 price: 690,
                 description: 'Moderní telefon s kvalitním fotoaparátem a vlastním ekosystémem aplikací',
                 stockQuantity: 4,
-                image_url: "/images/samsung2.png"
+                image_url: "/images/samsung2.png",
+                category: "servers"
             },
             {
                 name: 'Motorola Edge 30',
                 price: 990,
                 description: 'Prémiový telefon s 144Hz displejem a pokročilými funkcemi pro fotografy',
                 stockQuantity: 1,
-                image_url: "/images/iphone.png"
+                image_url: "/images/iphone.png",
+                category: "servers"
             },
             {
                 name: 'Vivo V25',
                 price: 890,
                 description: 'Stylový telefon s pokročilými selfie funkcemi a rychlým 5G připojením',
                 stockQuantity: 2,
-                image_url: "/images/samsung2.png"
+                image_url: "/images/samsung2.png",
+                category: "servers"
             },
             {
                 name: 'Sony Xperia 5',
                 price: 2990,
                 description: 'Profesionální telefon s kinematografickým displejem a pokročilými funkcemi pro video',
                 stockQuantity: 1,
-                image_url: "/images/iphone.png"
+                image_url: "/images/iphone.png",
+                category: "servers"
             }
         ];
 
-        const stmt = this.db.prepare('INSERT INTO products (name, price, description, stockQuantity, image_url, discount) VALUES (?, ?, ?, ?, ?, ?)');
+        const stmt = this.db.prepare('INSERT INTO products (name, price, description, stockQuantity, image_url, discount, category) VALUES (?, ?, ?, ?, ?, ?, ?)');
 
         for (const product of products) {
             // Kontrola existence produktu
@@ -177,7 +187,8 @@ export class EshopBeClass {
                         product.description,
                         product.stockQuantity,
                         product.image_url,
-                        product.discount || 0
+                        product.discount || 0,
+                        product.category
                     ], (err) => {
                         if (err) reject(err);
                         else {
@@ -205,14 +216,15 @@ export class EshopBeClass {
     
             return new Promise((resolve, reject) => {
                 this.db.run(
-                    'INSERT INTO products (name, price, description, stockQuantity, image_url, discount) VALUES (?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO products (name, price, description, stockQuantity, image_url, discount, category) VALUES (?, ?, ?, ?, ?, ?, ?)',
                     [
                         product.name,
                         product.price,
                         product.description,
                         product.stockQuantity,
                         imagePath,
-                        product.discount || 0
+                        product.discount || 0,
+                        product.category
                     ],
                     function (err) {
                         if (err) {
@@ -264,6 +276,49 @@ export class EshopBeClass {
             );
         });
     }
+
+    // V EshopBeClass přidáme tuto metodu
+async updateProduct(id: number, updatedData: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+        // Sestavíme SQL dotaz pro aktualizaci
+        const sql = `
+            UPDATE products 
+            SET name = ?, 
+                price = ?, 
+                description = ?, 
+                stockQuantity = ?, 
+                discount = ?,
+                category =?
+            WHERE id = ?
+        `;
+
+        // Hodnoty pro aktualizaci
+        const values = [
+            updatedData.name,
+            updatedData.price,
+            updatedData.description,
+            updatedData.stockQuantity,
+            updatedData.discount || 0,
+            updatedData.category,
+            id
+        ];
+
+        this.db.run(sql, values, async (err) => {
+            if (err) {
+                console.error('Chyba při aktualizaci produktu:', err);
+                reject(err);
+            } else {
+                // Po úspěšné aktualizaci vrátíme aktualizovaný produkt
+                try {
+                    const updatedProduct = await this.getProductById(id);
+                    resolve(updatedProduct);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+        });
+    });
+}
 
     
 

@@ -5,7 +5,8 @@ CREATE TABLE products (
     description TEXT,
     stockQuantity INTEGER NOT NULL DEFAULT 0,
     image_url TEXT,
-    discount INTEGER DEFAULT 0
+    discount INTEGER DEFAULT 0,
+    category TEXT NOT NULL DEFAULT 'Uncategorized'
 );
 
 CREATE TABLE customers (

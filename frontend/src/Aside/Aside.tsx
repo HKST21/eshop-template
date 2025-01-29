@@ -4,9 +4,11 @@ import { Product } from '../types/types';
 import { Link } from 'react-router-dom';
 
 interface AsideProps {
-    products: Product[]
+    products: Product[],
+    activeCategory: 'servers' | 'graphicCards' | 'cables' | 'utilities' | 'drones',
+    setActiveCategory: React.Dispatch<React.SetStateAction<'servers' | 'graphicCards' | 'cables' | 'utilities' | 'drones'>>
 }
-export function Aside({ products }: AsideProps) {
+export function Aside({ products, activeCategory, setActiveCategory }: AsideProps) {
 
     const [textToSearch, setTextToSearch] = useState<string>("");
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -87,11 +89,11 @@ export function Aside({ products }: AsideProps) {
         <aside className="categories-aside">
             <h2>Categories</h2>
             <ul>
-                <li>Servers</li>
-                <li>Graphic cards</li>
-                <li>Cables</li>
-                <li>Utilities</li>
-                <li>Drones</li>
+                <li onClick={() => setActiveCategory('servers')}>Servers</li>
+                <li onClick={() => setActiveCategory('graphicCards')}>Graphic cards</li>
+                <li onClick={() => setActiveCategory('cables')}>Cables</li>
+                <li onClick={() => setActiveCategory('utilities')}>Utilities</li>
+                <li onClick={() => setActiveCategory('drones')}>Drones</li>
             </ul>
             <div>
                 <h4>SEARCH PRODUCTS</h4>

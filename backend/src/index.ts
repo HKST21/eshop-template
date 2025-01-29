@@ -4,6 +4,8 @@ import { EshopBeClass } from "./class/eshopBeClass";
 import multer from 'multer';
 
 
+
+
 const app = express();
 const port = process.env.PORT || 3010;
 
@@ -24,7 +26,9 @@ const upload = multer({
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 app.use(express.json());  // Pro JSON data
 app.use(express.static('public'));  // Pro servírování statických souborů (obrázků)
 
@@ -79,6 +83,27 @@ app.get('/api/products/:id', async (req: Request, res: Response) => {
     }
     catch (e) { 
         console.error("failed getting product by id", e)
+    }
+});
+
+app.put('/api/products/:id', async (req: Request, res: Response) => {
+    try {
+        const productId = parseInt(req.params.id);
+        const productToUpdate = req.body;
+
+        console.log('Attempting to update product:', { productId, updateData: productToUpdate });
+
+        const existingProduct = await eshopBe.getProductById(productId);
+
+
+        const updatedProduct = await eshopBe.updateProduct(productId, productToUpdate);
+        console.log('Product updated successfully:', updatedProduct);
+        
+        res.json(updatedProduct);
+    } catch (e) {
+        console.error("Failed to update product:", e);
+        res.status(500).json({ error: "Failed to update product" })
+        
     }
 });
 

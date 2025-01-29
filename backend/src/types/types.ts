@@ -8,7 +8,8 @@ export interface Product {
     description: string,
     stockQuantity: number,
     image_url: string,
-    final_price?: number  // Přidáme pole pro vypočítanou cenu po slevě
+    final_price?: number,
+    category: string  // Přidáme pole pro vypočítanou cenu po slevě
 }
 
 export interface CartItem {
@@ -17,7 +18,8 @@ export interface CartItem {
         id: number,
         name: string,
         price: number,
-        discount?: number  // přidáme discount i do košíku
+        discount?: number,
+        final_price?: number  // přidáme discount i do košíku
     }
 }
 

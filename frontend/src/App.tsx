@@ -20,6 +20,8 @@ function App() {
   const [cart, setCart] = useState<CartItem[]>([]); // inicialize with empty array
 
   const [products, setProducts] = useState<Product[]>([]);
+
+  const [activeCategory, setActiveCategory] = useState<'servers' | 'graphicCards' | 'cables' | 'utilities' | 'drones'>('servers')
   
 
 
@@ -44,10 +46,10 @@ function App() {
     <>
       <div>
         <BrowserRouter>
-          <Layout cart={cart} setCart={setCart} products={products}>
+          <Layout cart={cart} setCart={setCart} products={products} activeCategory={activeCategory} setActiveCategory={setActiveCategory}>
             {/* TOHLE VŠECHNO JE CHILDREN PROP PRO LAYOUT*/}
             <Routes>
-              <Route path="/products" element={<ProductList setCart={setCart} cart={cart} products={products} />} />
+              <Route path="/products" element={<ProductList setCart={setCart} cart={cart} products={products} activeCategory={activeCategory} />} />
               <Route path='/products/:id' element={<ProductDetail setCart={setCart} cart={cart} />} />
               <Route path="/about" element={<About />} />
               <Route path="/terms" element={<Terms />} />

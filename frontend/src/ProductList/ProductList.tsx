@@ -11,6 +11,7 @@ interface ProductListProps {
     cart: CartItem[];
     setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
     products: Product[];
+    activeCategory: 'servers' | 'graphicCards' | 'cables' | 'utilities' | 'drones'
 }
 
 interface HoverState {
@@ -20,7 +21,7 @@ interface HoverState {
 
 
 
-export function ProductList({ cart, setCart, products }: ProductListProps) {
+export function ProductList({ cart, setCart, products, activeCategory }: ProductListProps) {
 
     const [isLoaded, setIsLoaded] = useState<{ [key: number]: boolean }>({})
 
@@ -29,7 +30,6 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
         visible: false
     })
 
-    console.log("produkty", products)
 
     const handleAddToCart = (product: Product) => {
 
@@ -61,7 +61,9 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
                 product: {
                     id: product.id,
                     name: product.name,
-                    price: product.price
+                    price: product.price,
+                    discount: product.discount,
+                    final_price: product.final_price ?? product.price
                 }
             };
 
@@ -89,8 +91,6 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
         })
     }
 
-
-
     const handleLoaded = (id: number | undefined) => {
 
         if (id) {
@@ -116,71 +116,78 @@ export function ProductList({ cart, setCart, products }: ProductListProps) {
 
     Každý obrázek prochází tímto procesem nezávisle.*/
 
+    console.log("produkty", products)
+
     return (
-        <div className="productList-container">
-            {products ? products.map((product, i) => (
-                <div className="each-product" key={i}>
-                    <Link to={`/products/${product.id}`}>
-                        <div>
-                            <div className="product-head-container">
-                                <div className="left-column"></div>
-                                <div className="center-column">{product.name}</div>
-                                {product.discount && product.discount > 1 ? <div className="right-column">-{product.discount}%</div> : 
-                                null}
+        <div>
+            <div className="productList-container">
+                {products && products.map((product, i) => {
+                    if (product.category === activeCategory) {
+                        return <div className="each-product" key={i}>
+                            <Link to={`/products/${product.id}`}>
+                                <div>
+                                    <div className="product-head-container">
+                                        <div className="left-column"></div>
+                                        <div className="center-column">{product.name}</div>
+                                        {product.discount && product.discount > 1 ? <div className="right-column">-{product.discount}%</div> :
+                                            null}
+                                    </div>
+                                    <p />
+                                    <span style={{ color: product.stockQuantity > 0 ? 'green' : '#d40606' }}>
+                                        {product.stockQuantity > 0 ? 'in stock' : 'out of stock'}
+                                    </span>
+                                    <p />
+                                    {product.discount && product.discount > 1 ? (
+                                        <div className="price-container">
+                                            <div className="price-striked">
+                                                € {product.price}
+                                            </div>
+                                            <div className="final-price">
+                                                € {product.final_price}
+                                            </div>
+                                        </div>
+                                    ) : (<div>€ {product.price}</div>)}
+
+                                    <p />
+                                    <img
+                                        onLoad={() => handleLoaded(product.id)}
+                                        loading="lazy"
+                                        onMouseEnter={() => handleOnMouseEnterImg(product.id)}
+                                        onMouseLeave={() => handleOnMouseLeaveImg(product.id)}
+                                        className={`product-image ${picHovered.id === product.id && picHovered.visible ? "product-image-hovered" : ""}`}
+                                        src={product.image_url}
+                                        alt={product.name}
+                                    />
+                                </div>
+                            </Link>
+                            <p />
+                            <div className="button-group">
+                                {product.stockQuantity > 0 ? (
+                                    <button onClick={() => handleAddToCart(product)}>
+                                        <ShoppingCart size={25} />
+                                        <span>TO CART</span>
+                                    </button>
+                                ) : (
+                                    <button disabled>
+                                        <ShoppingCart size={20} />
+                                        <span>TO CART</span>
+                                    </button>
+                                )}
+                                {cart.some(item => product.id === item.product.id) ? (
+                                    <button onClick={() => handleRemoveFromCart(product.id as number)}>REMOVE</button>
+                                ) : null}
                             </div>
                             <p />
-                            <span style={{ color: product.stockQuantity > 0 ? 'green' : '#d40606' }}>
-                                {product.stockQuantity > 0 ? 'in stock' : 'out of stock'}
-                            </span>
-                            <p />
-                            {product.discount && product.discount > 1 ? (
-                                <div className="price-container">
-                                    <div className="price-striked">
-                                        € {product.price}
-                                    </div>
-                                    <div className="final-price">
-                                        € {product.final_price}
-                                    </div>
-                                </div>
-                            ) : (<div>€ {product.price}</div>)}
-
-                            <p />
-                            <img
-                                onLoad={() => handleLoaded(product.id)}
-                                loading="lazy"
-                                onMouseEnter={() => handleOnMouseEnterImg(product.id)}
-                                onMouseLeave={() => handleOnMouseLeaveImg(product.id)}
-                                className={`product-image ${picHovered.id === product.id && picHovered.visible ? "product-image-hovered" : ""}`}
-
-                                src={product.image_url}
-                                alt={product.name}
-
-                            />
-
-
-
                         </div>
-                    </Link>
-                    <p />
-                    <div className="button-group">
-                        {product.stockQuantity > 0 ? (
-                            <button onClick={() => handleAddToCart(product)}>
-                                <ShoppingCart size={25} />
-                                <span>TO CART</span>
-                            </button>
-                        ) : (
-                            <button disabled>
-                                <ShoppingCart size={20} />
-                                <span>TO CART</span>
-                            </button>
-                        )}
-                        {cart.some(item => product.id === item.product.id) ? (
-                            <button onClick={() => handleRemoveFromCart(product.id as number)}>REMOVE</button>
-                        ) : null}
-                    </div>
-                    <p />
-                </div>
-            )) : <div className="loading-spinner"></div>}
+                    }
+                }
+                )}
+            </div>
+            <div>
+                {!products && (
+                    <div className="loading-spinner"></div>
+                ) }
+            </div>
         </div>
     );
 }
