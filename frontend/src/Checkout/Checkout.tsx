@@ -51,7 +51,7 @@ export function Checkout({ cart, setCart }: CheckoutProps) {
             firstName: formData.get('firstName') as string,
             lastName: formData.get('lastName') as string,
             email: formData.get('email') as string,
-            phoneNumber: Number(formData.get('phoneNumber')), //warn
+            phoneNumber: formData.get('phoneNumber') as string, 
             deliveryAddress: formData.get('deliveryAddress') as string
 
             //TODO: vyřešit, aby se posílal na backend i zip code

@@ -2,15 +2,45 @@ import sqlite3 from 'sqlite3';  // Import SQLite knihovny
 import { Product, CartItem, Order, OrderItem, CustomerData } from '../types/types';  // Import interface pro produkt
 import fs from 'fs';
 import path from 'path';
+import nodemailer from 'nodemailer';
 
 export class EshopBeClass {
     private db: sqlite3.Database;  // Instance databáze (private = přístupná jen uvnitř třídy)
+    private transporter: nodemailer.Transporter;
 
     constructor() {
         // Constructor se spustí při vytvoření instance třídy
         this.db = new sqlite3.Database('./src/db/database.sqlite');  // Připojení k databázi
         this.initDB();  // Inicializace databáze
+
+        this.transporter = nodemailer.createTransport({
+            service: 'gmail', // Používáme Gmail jako službu
+            auth: {
+                user: 'templatebos930@gmail.com', // Tvůj Gmail účet
+                pass: 'rlnv soxg omfg tskq', // Heslo aplikace, které jsi vygeneroval
+            },
+        });
     }
+
+    // Metoda pro odesílání e-mailu
+    private async sendEmail(to: string, subject: string, text: string): Promise<void> {
+        const mailOptions = {
+            from: 'templatebos930@gmail.com', // Odesílatel (tvůj Gmail)
+            to, // Příjemce
+            subject, // Předmět e-mailu
+            text, // Text e-mailu
+        };
+
+        try {
+            await this.transporter.sendMail(mailOptions);
+            console.log('E-mail byl úspěšně odeslán');
+        } catch (error) {
+            console.error('Chyba při odesílání e-mailu:', error);
+            throw error;
+        }
+    }
+
+    
 
     private async initDB() {
         return new Promise((resolve, reject) => {
@@ -449,7 +479,11 @@ async updateProduct(id: number, updatedData: any): Promise<any> {
 `;
 
             // TODO: Implementace odeslání emailu
-            console.log('Email pro zákazníka:', emailContent);
+            await this.sendEmail(
+                customerData.email, // E-mail zákazníka
+                `Potvrzení objednávky č. ${orderId}`, // Předmět e-mailu
+                emailContent // Obsah e-mailu
+            );
 
             // 7. Vrácení vytvořené objednávky
             const order: Order = {
